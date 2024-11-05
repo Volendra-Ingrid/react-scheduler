@@ -58,8 +58,8 @@ const EditorSelect = ({
     errorMsg: errMsg
       ? errMsg
       : required
-      ? translations?.validation?.required || "Required"
-      : undefined,
+        ? translations?.validation?.required || "Required"
+        : undefined,
   });
 
   useEffect(() => {

@@ -1,4 +1,5 @@
 import { Paper, alpha, styled } from "@mui/material";
+// import zIndex from "@mui/material/styles/zIndex";
 
 export const Wrapper = styled("div")<{ dialog: number }>(({ theme, dialog }) => ({
   position: "relative",
@@ -43,7 +44,7 @@ export const NavigationDiv = styled(Paper)<{ sticky?: string }>(({ sticky = "0" 
   justifyContent: "space-between",
   alignItems: "center",
   position: sticky === "1" ? "sticky" : "relative",
-  top: sticky === "1" ? 0 : undefined,
+  top: sticky === "1" ? -17 : undefined,
   zIndex: sticky === "1" ? 999 : undefined,
   boxShadow: "none",
   padding: "2px 0",
@@ -97,7 +98,7 @@ export const TableGrid = styled("div")<{
   overflowX: "auto",
   overflowY: "hidden",
   position: sticky === "1" ? "sticky" : "relative",
-  top: sticky === "1" ? (stickyNavigation ? 36 : 0) : undefined,
+  top: sticky === "1" ? (stickyNavigation ? 23 : -17) : undefined,
   zIndex: sticky === "1" ? 99 : undefined,
   [theme.breakpoints.down("sm")]: {
     gridTemplateColumns: +indent > 0 ? `30px repeat(${days}, 1fr)` : "",
@@ -118,6 +119,7 @@ export const TableGrid = styled("div")<{
     borderColor: theme.palette.grey[300],
     borderWidth: "0 1px 1px 0",
     "&.rs__header": {
+      // zIndex: 0,
       "& > :first-of-type": {
         padding: "2px 5px",
       },

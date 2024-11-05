@@ -40,7 +40,7 @@ const defaultTranslations = (trans: Partial<SchedulerProps["translations"]> = {}
   const { navigation, form, event, ...other } = trans;
 
   return {
-    navigation: Object.assign(
+    navigation: Object?.assign(
       {
         month: "Month",
         week: "Week",
@@ -50,7 +50,7 @@ const defaultTranslations = (trans: Partial<SchedulerProps["translations"]> = {}
       },
       navigation
     ),
-    form: Object.assign(
+    form: Object?.assign(
       {
         addTitle: "Add Event",
         editTitle: "Edit Event",
@@ -149,6 +149,7 @@ export const initialStore = {
   triggerDialog: () => {},
   triggerLoading: () => {},
   handleGotoDay: () => {},
+  handleGotoDayPopup: () => {},
   confirmEvent: () => {},
   setCurrentDragged: () => {},
   onDrop: () => {},

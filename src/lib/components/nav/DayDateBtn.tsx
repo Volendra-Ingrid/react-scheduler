@@ -1,3 +1,4 @@
+// import { useState, useEffect } from "react";
 import { useState } from "react";
 import DateProvider from "../hoc/DateProvider";
 import { DateCalendar } from "@mui/x-date-pickers";
@@ -23,6 +24,7 @@ const DayDateBtn = ({ selectedDate, onChange }: DayDateBtnProps) => {
   };
 
   const handleChange = (e: Date | null) => {
+    // alert(e);
     onChange(e || new Date());
     handleClose();
   };
@@ -35,6 +37,11 @@ const DayDateBtn = ({ selectedDate, onChange }: DayDateBtnProps) => {
     const nexDay = addDays(selectedDate, 1);
     onChange(nexDay);
   };
+
+  // useEffect(() => {
+  //   console.log("selectedDate in day btn", selectedDate);
+  // }, [selectedDate]);
+
   return (
     <>
       <LocaleArrow type="prev" onClick={handlePrev} aria-label="previous day" />

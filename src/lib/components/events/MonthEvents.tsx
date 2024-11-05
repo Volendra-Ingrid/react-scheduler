@@ -47,6 +47,9 @@ const MonthEvents = ({
   const renderEvents = useMemo(() => {
     const elements: JSX.Element[] = [];
 
+    // console.log("today events", events);
+    // console.log("today", today);
+
     for (let i = 0; i < Math.min(events.length, LIMIT + 1); i++) {
       const event = convertEventTimeZone(events[i], timeZone);
       const fromPrevWeek = !!eachFirstDayInCalcRow && isBefore(event.start, eachFirstDayInCalcRow);

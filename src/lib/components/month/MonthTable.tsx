@@ -24,6 +24,8 @@ import { TableGrid } from "../../styles/styles";
 import { DefaultResource } from "../../types";
 import Cell from "../common/Cell";
 import MonthEvents from "../events/MonthEvents";
+// import DayPopup from "../../views/DayPopup";
+// import Editor from "../../views/Editor";
 
 type Props = {
   daysList: Date[];
@@ -38,16 +40,19 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
     selectedDate,
     events,
     handleGotoDay,
+    // handleGotoDayPopup,
     resourceFields,
     fields,
     locale,
     hourFormat,
     stickyNavigation,
     timeZone,
+    // dialog,
     onClickMore,
   } = useStore();
   const { weekDays, startHour, endHour, cellRenderer, headRenderer, disableGoToDay } = month!;
   const { headersRef, bodyRef } = useSyncScroll();
+  // const [showDayPopup, setShowDayPopup] = useState(false);
 
   const theme = useTheme();
   const monthStart = startOfMonth(selectedDate);
@@ -56,10 +61,31 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
 
   const renderCells = useCallback(
     (resource?: DefaultResource) => {
+      // console.log(" CELL_HEIGHT" , CELL_HEIGHT,
+      // "cellRenderer", cellRenderer,
+      // "daysList", daysList,
+      // "disableGoToDay", disableGoToDay,
+      // "eachWeekStart", eachWeekStart,
+      // "endHour", endHour,
+      // "events", events,
+      // "fields", fields,
+      // "hFormat", hFormat,
+      // "handleGotoDay", handleGotoDay,
+      // "headRenderer", headRenderer,
+      // "monthStart", monthStart,
+      // "onClickMore", onClickMore,
+      // "resourceFields", resourceFields,
+      // "selectedDate", selectedDate,
+      // "startHour", startHour,
+      // "theme.palette.secondary.contrastText", theme.palette.secondary.contrastText,
+      // "theme.palette.secondary.main", theme.palette.secondary.main,
+      // "timeZone", timeZone,
+      // "weekDays", weekDays);
       let resourcedEvents = sortEventsByTheEarliest(events);
       if (resource) {
         resourcedEvents = getResourcedEvents(events, resource, resourceFields, fields);
       }
+      // console.log("resourcedEvents", resourcedEvents);
       const rows: JSX.Element[] = [];
 
       for (const startDay of eachWeekStart) {
@@ -80,7 +106,40 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
             });
           const isToday = isTimeZonedToday({ dateLeft: today, timeZone });
           return (
-            <span style={{ height: CELL_HEIGHT }} key={d.toString()} className="rs__cell">
+            <span
+              style={{ height: CELL_HEIGHT }}
+              key={d.toString()}
+              className="rs__cell"
+              onClick={(e) => {
+                e.stopPropagation();
+                if (!disableGoToDay) {
+                  handleGotoDay(today);
+                }
+              }}
+              // onMouseEnter={(e) => {
+              //   e.stopPropagation();
+              //   if (!disableGoToDay) {
+              //     handleGotoDayPopup(today);
+              //   }
+
+              //   setShowDayPopup(true);
+              // }}
+              // onClick={(e) => {
+              //   e.stopPropagation();
+              //   if (!disableGoToDay) {
+              //     handleGotoDayPopup(today);
+              //   }
+
+              //   setShowDayPopup(true);
+              // }}
+              // onMouseLeave={(e) => {
+              //   e.stopPropagation();
+              //   if (!disableGoToDay) {
+              //     handleGotoDayPopup(today);
+              //   }
+              //   setShowDayPopup(false);
+              // }}
+            >
               <Cell
                 start={start}
                 end={end}
@@ -100,7 +159,8 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                       height: 27,
                       position: "absolute",
                       top: 0,
-                      background: isToday ? theme.palette.secondary.main : "transparent",
+                      // background: isToday ? theme.palette.secondary.main : "transparent",
+                      background: "transparent",
                       color: isToday ? theme.palette.secondary.contrastText : "",
                       marginBottom: 2,
                     }}
@@ -111,6 +171,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                       onClick={(e) => {
                         e.stopPropagation();
                         if (!disableGoToDay) {
+                          // console.log("today, hadleGotopay calledinside monthtable", today);
                           handleGotoDay(today);
                         }
                       }}
@@ -138,7 +199,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
             </span>
           );
         });
-
+        // console.log('cells', cells);
         rows.push(<Fragment key={startDay.toString()}>{cells}</Fragment>);
       }
       return rows;
@@ -161,12 +222,14 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
       selectedDate,
       startHour,
       theme.palette.secondary.contrastText,
-      theme.palette.secondary.main,
+      // theme.palette.secondary.main,
       timeZone,
       weekDays,
     ]
   );
-
+  // console.log("daysList", daysList);
+  // console.log("eachWeekStart", eachWeekStart);
+  // console.log("resource", resource);
   return (
     <>
       {/* Header Days */}
@@ -192,6 +255,10 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
       <TableGrid days={daysList.length} ref={bodyRef} indent="0">
         {renderCells(resource)}
       </TableGrid>
+      {/* {showDayPopup && selectedDate && (
+        // <DayPopup/>
+        <Editor/>
+      )} */}
     </>
   );
 };

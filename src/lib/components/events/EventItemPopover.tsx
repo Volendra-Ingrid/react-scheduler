@@ -3,7 +3,7 @@ import { Box, IconButton, Popover, Typography, useTheme } from "@mui/material";
 import useStore from "../../hooks/useStore";
 import { ProcessedEvent } from "../../types";
 import { PopperInner } from "../../styles/styles";
-import EventActions from "./Actions";
+// import EventActions from "./Actions";
 import { differenceInDaysOmitTime, getHourFormat } from "../../helpers/generals";
 import EventNoteRoundedIcon from "@mui/icons-material/EventNoteRounded";
 import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
@@ -18,11 +18,11 @@ type Props = {
 
 const EventItemPopover = ({ anchorEl, event, onTriggerViewer }: Props) => {
   const {
-    triggerDialog,
-    onDelete,
-    events,
-    handleState,
-    triggerLoading,
+    // triggerDialog,
+    // onDelete,
+    // events,
+    // handleState,
+    // triggerLoading,
     customViewer,
     viewerExtraComponent,
     fields,
@@ -33,7 +33,7 @@ const EventItemPopover = ({ anchorEl, event, onTriggerViewer }: Props) => {
     viewerSubtitleComponent,
     hourFormat,
     translations,
-    onEventEdit,
+    // onEventEdit,
   } = useStore();
   const theme = useTheme();
   const hideDates = differenceInDaysOmitTime(event.start, event.end) <= 0 && event.allDay;
@@ -43,30 +43,30 @@ const EventItemPopover = ({ anchorEl, event, onTriggerViewer }: Props) => {
     Array.isArray(event[idKey]) ? event[idKey].includes(res[idKey]) : res[idKey] === event[idKey]
   );
 
-  const handleDelete = async () => {
-    try {
-      triggerLoading(true);
-      let deletedId = event.event_id;
-      // Trigger custom/remote when provided
-      if (onDelete) {
-        const remoteId = await onDelete(deletedId);
-        if (remoteId) {
-          deletedId = remoteId;
-        } else {
-          deletedId = "";
-        }
-      }
-      if (deletedId) {
-        onTriggerViewer();
-        const updatedEvents = events.filter((e) => e.event_id !== deletedId);
-        handleState(updatedEvents, "events");
-      }
-    } catch (error) {
-      console.error(error);
-    } finally {
-      triggerLoading(false);
-    }
-  };
+  // const handleDelete = async () => {
+  //   try {
+  //     triggerLoading(true);
+  //     let deletedId = event.event_id;
+  //     // Trigger custom/remote when provided
+  //     if (onDelete) {
+  //       const remoteId = await onDelete(deletedId);
+  //       if (remoteId) {
+  //         deletedId = remoteId;
+  //       } else {
+  //         deletedId = "";
+  //       }
+  //     }
+  //     if (deletedId) {
+  //       onTriggerViewer();
+  //       const updatedEvents = events.filter((e) => e.event_id !== deletedId);
+  //       handleState(updatedEvents, "events");
+  //     }
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     triggerLoading(false);
+  //   }
+  // };
 
   return (
     <Popover
@@ -108,7 +108,7 @@ const EventItemPopover = ({ anchorEl, event, onTriggerViewer }: Props) => {
                   <ClearRoundedIcon color="disabled" />
                 </IconButton>
               </div>
-              <EventActions
+              {/* <EventActions
                 event={event}
                 onDelete={handleDelete}
                 onEdit={() => {
@@ -119,7 +119,7 @@ const EventItemPopover = ({ anchorEl, event, onTriggerViewer }: Props) => {
                     onEventEdit(event);
                   }
                 }}
-              />
+              /> */}
             </div>
             {viewerTitleComponent instanceof Function ? (
               viewerTitleComponent(event)

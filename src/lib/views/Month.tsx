@@ -33,6 +33,10 @@ const Month = () => {
     agenda,
   } = useStore();
 
+  // useEffect(() => {
+  //   console.log("selected date in month", selectedDate);
+  // }, [selectedDate]);
+
   const { weekStartOn, weekDays } = month!;
   const monthStart = startOfMonth(selectedDate);
   const monthEnd = endOfMonth(selectedDate);
@@ -87,7 +91,6 @@ const Month = () => {
     },
     [agenda, daysList, eachWeekStart, events, fields, resourceFields]
   );
-
   return resources.length ? <WithResources renderChildren={renderTable} /> : renderTable();
 };
 

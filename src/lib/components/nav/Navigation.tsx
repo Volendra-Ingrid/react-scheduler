@@ -12,10 +12,10 @@ import { WeekDateBtn } from "./WeekDateBtn";
 import { DayDateBtn } from "./DayDateBtn";
 import { MonthDateBtn } from "./MonthDateBtn";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
-import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
+// import ViewAgendaIcon from "@mui/icons-material/ViewAgenda";
 import useStore from "../../hooks/useStore";
 import { NavigationDiv } from "../../styles/styles";
-import { getTimeZonedDate } from "../../helpers/generals";
+// import { getTimeZonedDate } from "../../helpers/generals";
 
 export type View = "month" | "week" | "day";
 
@@ -34,10 +34,10 @@ const Navigation = () => {
     onSelectedDateChange,
     onViewChange,
     stickyNavigation,
-    timeZone,
+    // timeZone,
     agenda,
     toggleAgenda,
-    enableAgenda,
+    // enableAgenda,
   } = useStore();
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const theme = useTheme();
@@ -49,7 +49,9 @@ const Navigation = () => {
   };
 
   const handleSelectedDateChange = (date: Date) => {
+    // console.log("date in handleSelecteddatechange", date);
     handleState(date, "selectedDate");
+    // alert(`date in handleSelecteddatechange ${date}`);
 
     if (onSelectedDateChange && typeof onSelectedDateChange === "function") {
       onSelectedDateChange(date);
@@ -83,7 +85,8 @@ const Navigation = () => {
         );
       case "day":
         return (
-          day?.navigation && (
+          day?.navigation &&
+          selectedDate && (
             <DayDateBtn selectedDate={selectedDate} onChange={handleSelectedDateChange} />
           )
         );
@@ -105,13 +108,13 @@ const Navigation = () => {
           visibility: disableViewNavigator ? "hidden" : "visible",
         }}
       >
-        <Button
+        {/* <Button
           onClick={() => handleSelectedDateChange(getTimeZonedDate(new Date(), timeZone))}
           aria-label={translations.navigation.today}
         >
           {translations.navigation.today}
-        </Button>
-        {enableAgenda &&
+        </Button> */}
+        {/* {enableAgenda &&
           (isDesktop ? (
             <Button
               color={agenda ? "primary" : "inherit"}
@@ -128,7 +131,7 @@ const Navigation = () => {
             >
               <ViewAgendaIcon />
             </IconButton>
-          ))}
+          ))} */}
 
         {views.length > 1 &&
           (isDesktop ? (
@@ -136,7 +139,12 @@ const Navigation = () => {
               <Button
                 key={v}
                 color={v === view ? "primary" : "inherit"}
-                onClick={() => handleChangeView(v)}
+                onClick={() => {
+                  handleChangeView(v);
+                  if (agenda) {
+                    toggleAgenda();
+                  }
+                }}
                 onDragOver={(e) => {
                   e.preventDefault();
                   handleChangeView(v);

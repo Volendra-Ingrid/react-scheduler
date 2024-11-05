@@ -35,6 +35,11 @@ const Week = () => {
     fields,
     agenda,
   } = useStore();
+
+  // useEffect(() => {
+  //   console.log("selected date in week", selectedDate);
+  // }, [selectedDate]);
+
   const { weekStartOn, weekDays, startHour, endHour, step } = week!;
   const _weekStart = startOfWeek(selectedDate, { weekStartsOn: weekStartOn });
   const daysList = weekDays.map((d) => addDays(_weekStart, d));
@@ -84,6 +89,8 @@ const Week = () => {
       resourcedEvents = getResourcedEvents(events, resource, resourceFields, fields);
     }
 
+    // console.log("agenda");
+    // console.log(agenda);
     if (agenda) {
       return <WeekAgenda daysList={daysList} events={resourcedEvents} />;
     }
@@ -100,7 +107,8 @@ const Week = () => {
     );
   };
 
-  return resources.length ? <WithResources renderChildren={renderTable} /> : renderTable();
+  // return <div>{`${selectedDate}`}</div>;
+  return resources?.length ? <WithResources renderChildren={renderTable} /> : renderTable();
 };
 
 export { Week };

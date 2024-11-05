@@ -13,18 +13,19 @@ type Props = {
 };
 
 export const StoreProvider = ({ children, initial }: Props) => {
+  // const [state, set] = useState<Store>({ ...initialStore, ...defaultProps(initial) });
   const [state, set] = useState<Store>({ ...initialStore, ...defaultProps(initial) });
 
   useEffect(() => {
     set((prev) => ({
       ...prev,
-      onEventDrop: initial.onEventDrop,
-      customEditor: initial.customEditor,
-      events: initial.events || [],
+      onEventDrop: initial?.onEventDrop,
+      customEditor: initial?.customEditor,
+      events: initial?.events || [],
     }));
     // Rerender if changed on some props
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initial.onEventDrop, initial.customEditor, initial.events]);
+  }, [initial?.onEventDrop, initial?.customEditor, initial?.events]);
 
   const handleState = (value: SchedulerState[keyof SchedulerState], name: keyof SchedulerState) => {
     set((prev) => ({ ...prev, [name]: value }));
@@ -71,10 +72,12 @@ export const StoreProvider = ({ children, initial }: Props) => {
   };
 
   const handleGotoDay = (day: Date) => {
+    // console.log("day inside handlegotopay", day);
     const currentViews = getViews();
     let view: View | undefined;
     if (currentViews.includes("day")) {
       view = "day";
+
       set((prev) => ({ ...prev, view: "day", selectedDate: day }));
     } else if (currentViews.includes("week")) {
       view = "week";
@@ -86,6 +89,30 @@ export const StoreProvider = ({ children, initial }: Props) => {
     if (!!view && state.onViewChange && typeof state.onViewChange === "function") {
       state.onViewChange(view, state.agenda);
     }
+
+    if (!!view && state.onSelectedDateChange && typeof state.onSelectedDateChange === "function") {
+      state.onSelectedDateChange(day);
+    }
+  };
+
+  const handleGotoDayPopup = (day: Date) => {
+    // console.log("day inside handlegotopay", day);
+    const currentViews = getViews();
+    let view: View | undefined;
+    if (currentViews.includes("day")) {
+      view = "day";
+
+      set((prev) => ({ ...prev, selectedDate: day }));
+    } else if (currentViews.includes("week")) {
+      view = "week";
+      set((prev) => ({ ...prev, selectedDate: day }));
+    } else {
+      console.warn("No Day/Week views available");
+    }
+
+    // if (!!view && state.onViewChange && typeof state.onViewChange === "function") {
+    //   state.onViewChange(view, state.agenda);
+    // }
 
     if (!!view && state.onSelectedDateChange && typeof state.onSelectedDateChange === "function") {
       state.onSelectedDateChange(day);
@@ -195,6 +222,7 @@ export const StoreProvider = ({ children, initial }: Props) => {
         triggerDialog,
         triggerLoading,
         handleGotoDay,
+        handleGotoDayPopup,
         confirmEvent,
         setCurrentDragged,
         onDrop,

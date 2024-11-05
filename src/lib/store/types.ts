@@ -20,6 +20,7 @@ export interface Store extends SchedulerState {
   triggerDialog(status: boolean, event?: SelectedRange | ProcessedEvent): void;
   triggerLoading(status: boolean): void;
   handleGotoDay(day: Date): void;
+  handleGotoDayPopup(day: Date): void;
   confirmEvent(event: ProcessedEvent | ProcessedEvent[], action: EventActions): void;
   setCurrentDragged(event?: ProcessedEvent): void;
   onDrop(

@@ -35,6 +35,10 @@ const MonthDateBtn = ({ selectedDate, onChange }: MonthDateBtnProps) => {
     const nextMonth = currentMonth + 1;
     onChange(setMonth(selectedDate, nextMonth));
   };
+
+  // useEffect(() => {
+  //   console.log("selectedDate in month btn", selectedDate);
+  // }, [selectedDate]);
   return (
     <>
       <LocaleArrow type="prev" onClick={handlePrev} aria-label="previous month" />

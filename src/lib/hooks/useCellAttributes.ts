@@ -26,12 +26,23 @@ export const useCellAttributes = ({ start, end, resourceKey, resourceVal }: Prop
     disableRipple: !editable,
     onClick: () => {
       if (editable) {
-        triggerDialog(true, {
+        // triggerDialog(true, {
+        //   start,
+        //   end,
+        //   [resourceKey]: resourceVal,
+        // });
+        // SET TO FALSE FOR THE MEANTIME, TO AVOID POPUP FOR DAY VIEW
+        triggerDialog(false, {
           start,
           end,
           [resourceKey]: resourceVal,
         });
       }
+
+      // console.log("resource key", resourceKey);
+      // console.log("resouce val", resourceVal);
+      // console.log("start", start);
+      // console.log("end", end);
 
       if (onCellClick && typeof onCellClick === "function") {
         onCellClick(start, end, resourceKey, resourceVal);

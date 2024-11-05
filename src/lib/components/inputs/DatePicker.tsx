@@ -36,8 +36,8 @@ const EditorDatePicker = ({
     errorMsg: errMsg
       ? errMsg
       : required
-      ? translations?.validation?.required || "Required"
-      : undefined,
+        ? translations?.validation?.required || "Required"
+        : undefined,
   });
 
   const Picker = type === "date" ? DatePicker : DateTimePicker;

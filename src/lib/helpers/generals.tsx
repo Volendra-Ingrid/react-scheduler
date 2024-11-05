@@ -23,11 +23,11 @@ import {
 import { StateEvent } from "../views/Editor";
 
 export const getOneView = (state: Partial<SchedulerProps>): View => {
-  if (state.month) {
+  if (state?.month) {
     return "month";
-  } else if (state.week) {
+  } else if (state?.week) {
     return "week";
-  } else if (state.day) {
+  } else if (state?.day) {
     return "day";
   }
   throw new Error("No views were selected");
@@ -38,9 +38,9 @@ export const getAvailableViews = (state: SchedulerProps) => {
   if (state.month) {
     views.push("month");
   }
-  if (state.week) {
-    views.push("week");
-  }
+  // if (state.week) {
+  //   views.push("week");
+  // }
   if (state.day) {
     views.push("day");
   }
@@ -79,7 +79,7 @@ export const getResourcedEvents = (
     if (isThisResource) {
       resourcedEvents.push({
         ...event,
-        color: event.color || resource[resourceFields.colorField || ""],
+        color: event?.color || resource[resourceFields?.colorField || ""],
       });
     }
   }
@@ -147,12 +147,14 @@ export const filterTodayEvents = (
 ): ProcessedEvent[] => {
   const list: ProcessedEvent[] = [];
 
-  for (let i = 0; i < events.length; i++) {
+  for (let i = 0; i < events?.length; i++) {
     const event = convertEventTimeZone(events[i], timeZone);
 
     for (const rec of getRecurrencesForDate(event, today)) {
       const isToday =
-        !rec.allDay && isSameDay(today, rec.start) && !differenceInDaysOmitTime(rec.start, rec.end);
+        !rec?.allDay &&
+        isSameDay(today, rec?.start) &&
+        !differenceInDaysOmitTime(rec?.start, rec?.end);
       if (isToday) {
         list.push(rec);
       }
@@ -160,11 +162,15 @@ export const filterTodayEvents = (
   }
 
   // Sort by the length est event
-  return sortEventsByTheLengthest(list);
+  if (list?.length > 0) {
+    return sortEventsByTheLengthest(list);
+  } else {
+    return [];
+  }
 };
 
 export const filterTodayAgendaEvents = (events: ProcessedEvent[], today: Date) => {
-  const list: ProcessedEvent[] = events.filter((ev) =>
+  const list: ProcessedEvent[] = events?.filter((ev) =>
     isWithinInterval(today, {
       start: startOfDay(ev.start),
       end: endOfDay(subMinutes(ev.end, 1)),
@@ -175,7 +181,7 @@ export const filterTodayAgendaEvents = (events: ProcessedEvent[], today: Date) =
 };
 
 export const sortEventsByTheLengthest = (events: ProcessedEvent[]) => {
-  return events.sort((a, b) => {
+  return events?.sort((a, b) => {
     const aDiff = a.end.getTime() - a.start.getTime();
     const bDiff = b.end.getTime() - b.start.getTime();
     return bDiff - aDiff;
@@ -183,7 +189,7 @@ export const sortEventsByTheLengthest = (events: ProcessedEvent[]) => {
 };
 
 export const sortEventsByTheEarliest = (events: ProcessedEvent[]) => {
-  return events.sort((a, b) => {
+  return events?.sort((a, b) => {
     const isMulti = a.allDay || differenceInDaysOmitTime(a.start, a.end) > 0;
     return isMulti ? -1 : a.start.getTime() - b.start.getTime();
   });
@@ -198,21 +204,22 @@ export const filterMultiDaySlot = (
   const isMultiDates = Array.isArray(date);
   const list: ProcessedEvent[] = [];
   const multiPerDay: Record<string, ProcessedEvent[]> = {};
-  for (let i = 0; i < events.length; i++) {
+  for (let i = 0; i < events?.length; i++) {
+    console.log("timezone", timeZone);
     const event = convertEventTimeZone(events[i], timeZone);
-    let withinSlot = event.allDay || differenceInDaysOmitTime(event.start, event.end) > 0;
+    let withinSlot = event?.allDay || differenceInDaysOmitTime(event?.start, event?.end) > 0;
     if (!withinSlot) continue;
     if (isMultiDates) {
       withinSlot = date.some((weekday) =>
         isWithinInterval(weekday, {
-          start: startOfDay(event.start),
-          end: endOfDay(event.end),
+          start: startOfDay(event?.start),
+          end: endOfDay(event?.end),
         })
       );
     } else {
       withinSlot = isWithinInterval(date, {
-        start: startOfDay(event.start),
-        end: endOfDay(event.end),
+        start: startOfDay(event?.start),
+        end: endOfDay(event?.end),
       });
     }
 
@@ -221,19 +228,19 @@ export const filterMultiDaySlot = (
       if (isMultiDates) {
         for (const d of date) {
           const start = format(d, "yyyy-MM-dd");
-          if (isWithinInterval(d, { start: startOfDay(event.start), end: endOfDay(event.end) })) {
+          if (isWithinInterval(d, { start: startOfDay(event?.start), end: endOfDay(event?.end) })) {
             multiPerDay[start] = (multiPerDay[start] || []).concat(event);
           }
         }
       } else {
-        const start = format(event.start, "yyyy-MM-dd");
+        const start = format(event?.start, "yyyy-MM-dd");
         multiPerDay[start] = (multiPerDay[start] || []).concat(event);
       }
     }
   }
 
   if (isMultiDates && lengthOnly) {
-    return Object.values(multiPerDay).sort((a, b) => b.length - a.length)?.[0] || [];
+    return Object.values(multiPerDay)?.sort((a, b) => b?.length - a?.length)?.[0] || [];
   }
 
   return list;
@@ -242,8 +249,8 @@ export const filterMultiDaySlot = (
 export const convertEventTimeZone = (event: ProcessedEvent, timeZone?: string) => {
   return {
     ...event,
-    start: getTimeZonedDate(event.start, timeZone),
-    end: getTimeZonedDate(event.end, timeZone),
+    start: getTimeZonedDate(event?.start, timeZone),
+    end: getTimeZonedDate(event?.end, timeZone),
     convertedTz: true,
   };
 };
@@ -254,7 +261,7 @@ export const getTimeZonedDate = (date: Date, timeZone?: string) => {
       dateStyle: "short",
       timeStyle: "medium",
       timeZone,
-    }).format(date)
+    })?.format(date)
   );
 };
 
@@ -274,7 +281,7 @@ export const revertTimeZonedDate = (date: Date, timeZone?: string) => {
   // This always gets the offset between the local computer's time
   // and UTC. It has nothing to do with the value of the date object,
   // despite being an instance method.
-  const localOffset = -date.getTimezoneOffset();
+  const localOffset = -date?.getTimezoneOffset();
   const desiredOffset = getTimezoneOffset(timeZone);
   const diff = localOffset - desiredOffset;
   return new Date(date.getTime() + diff * 60 * 1000);

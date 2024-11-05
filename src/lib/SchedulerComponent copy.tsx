@@ -1,4 +1,3 @@
-import React, { forwardRef, useMemo } from "react";
 import { Week } from "./views/Week";
 import { Navigation } from "./components/nav/Navigation";
 import Editor from "./views/Editor";
@@ -6,40 +5,10 @@ import { CircularProgress, Typography } from "@mui/material";
 import { Month } from "./views/Month";
 import { Day } from "./views/Day";
 import { Table, Wrapper } from "./styles/styles";
+import { forwardRef, useMemo } from "react";
 import useStore from "./hooks/useStore";
 import { SchedulerRef } from "./types";
 import { PositionProvider } from "./positionManger/provider";
-
-// ErrorBoundary component with type annotations
-interface ErrorBoundaryProps {
-  children: React.ReactNode;
-}
-
-interface ErrorBoundaryState {
-  hasError: boolean;
-}
-
-class ErrorBoundary extends React.Component<ErrorBoundaryProps, ErrorBoundaryState> {
-  constructor(props: ErrorBoundaryProps) {
-    super(props);
-    this.state = { hasError: false };
-  }
-
-  static getDerivedStateFromError(error: Error) {
-    return { hasError: true };
-  }
-
-  componentDidCatch(error: Error, errorInfo: React.ErrorInfo) {
-    console.error("Error captured in boundary:", error, errorInfo);
-  }
-
-  render() {
-    if (this.state.hasError) {
-      return <div>Error loading view</div>;
-    }
-    return this.props.children;
-  }
-}
 
 const SchedulerComponent = forwardRef<SchedulerRef, unknown>(function SchedulerComponent(_, ref) {
   const store = useStore();
@@ -97,15 +66,14 @@ const SchedulerComponent = forwardRef<SchedulerRef, unknown>(function SchedulerC
       <Navigation />
       <Table
         resource_count={resourceViewMode === "default" ? resources.length : 1}
+        // Temp resources/default `sticky` wontfix
         sx={{
           overflowX: resourceViewMode === "default" && resources.length > 1 ? "auto" : undefined,
           flexDirection: resourceViewMode === "vertical" ? "column" : undefined,
         }}
         data-testid="grid"
       >
-        <ErrorBoundary>
-          <PositionProvider>{Views}</PositionProvider>
-        </ErrorBoundary>
+        <PositionProvider>{Views}</PositionProvider>
       </Table>
       {dialog && <Editor />}
     </Wrapper>

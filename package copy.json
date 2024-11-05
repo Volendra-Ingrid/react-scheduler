@@ -1,14 +1,8 @@
 {
-  "name": "@aldabil-edited-by-ingrid/react-scheduler",
-  "version": "1.0.0",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
-  "description": "React scheduler component based on Material-UI & date-fns modified by Ingrid from aldabil",
-  "files": [
-    "dist",
-    "LICENSE",
-    "README.md"
-  ],
+  "name": "@ingrid/react-scheduler",
+  "version": "2.9.5",
+  "description": "React scheduler component based on Material-UI & date-fns",
+  "files": ["*"],
   "scripts": {
     "start": "react-scripts start",
     "webpack": "webpack",
@@ -20,35 +14,23 @@
     "lint": "npm run types && eslint .",
     "lint:fix": "eslint . --fix",
     "types": "tsc --noEmit",
-    "prepare": "npm run build",
+    "prepare": "husky install",
     "pre:commit": "lint-staged",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:ci": "jest --ci",
-    "build": "webpack --config webpack.config.js",
-    "prettier": "prettier --write \"{src,tests,example/src}/**/*.{js,ts,jsx,tsx}\"",
-    "prepublishOnly": "npm run prettier && npm run lint"
+    "build": "webpack --config webpack.config.js"
   },
   "lint-staged": {
-    "**/*.{ts,js,tsx,jsx}": [
-      "npm run lint"
-    ],
-    "**/*.{ts,js,tsx,jsx,json,yml}": [
-      "npm run format:write"
-    ]
+    "**/*.{ts,js,tsx,jsx}": ["npm run lint"],
+    "**/*.{ts,js,tsx,jsx,json,yml}": ["npm run format:write"]
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/Volendra-Ingrid/react-scheduler.git"
+    "url": "https://github.com/aldabil21/react-scheduler.git"
   },
-  "keywords": [
-    "react",
-    "material-ui",
-    "calendar",
-    "scheduler",
-    "react calendar"
-  ],
-  "author": "Aldabil modified by Ingrid",
+  "keywords": ["react", "material-ui", "calendar", "scheduler"],
+  "author": "Aldabil",
   "license": "MIT",
   "homepage": "",
   "bugs": {
@@ -69,16 +51,14 @@
     "@typescript-eslint/parser": "^5.39.0",
     "date-fns": "^3.2.0",
     "eslint": "^8.24.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.1",
     "eslint-plugin-react": "^7.31.8",
     "husky": "^8.0.0",
     "jest": "^29.1.2",
     "jest-environment-jsdom": "^29.1.2",
     "lint-staged": "^13.0.3",
-    "prettier": "^3.3.3",
-    "react": "^18.0.0",
-    "react-dom": "^18.0.0",
+    "prettier": "^2.7.1",
+    "react": "^18.2.0",
+    "react-dom": "^18.2.0",
     "react-scripts": "^5.0.1",
     "rrule": "^2.8.1",
     "ts-jest": "^29.0.3",
@@ -92,9 +72,8 @@
     "@mui/icons-material": ">=5.0.0",
     "@mui/material": ">=5.0.0",
     "@mui/x-date-pickers": ">=6.19.0",
-    "@vechaiui/react": "^0.2.2",
     "date-fns": ">=3.2.0",
-    "react": ">=18.0.0",
+    "react": ">=17.0.0",
     "rrule": ">=2.8.1"
   },
   "peerDependenciesMeta": {
@@ -103,21 +82,10 @@
     }
   },
   "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
+    "extends": ["react-app", "react-app/jest"]
   },
   "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "production": [">0.2%", "not dead", "not op_mini all"],
+    "development": ["last 1 chrome version", "last 1 firefox version", "last 1 safari version"]
   }
 }
