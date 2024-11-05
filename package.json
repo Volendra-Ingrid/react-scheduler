@@ -1,5 +1,5 @@
 {
-  "name": "@aldabil-edited-by-ingrid/react-scheduler",
+  "name": "@ingrid_ibe/react-scheduler",
   "version": "1.0.0",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
