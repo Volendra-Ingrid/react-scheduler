@@ -38,9 +38,9 @@ export const getAvailableViews = (state: SchedulerProps) => {
   if (state.month) {
     views.push("month");
   }
-  // if (state.week) {
-  //   views.push("week");
-  // }
+  if (state.week) {
+    views.push("week");
+  }
   if (state.day) {
     views.push("day");
   }
@@ -205,7 +205,7 @@ export const filterMultiDaySlot = (
   const list: ProcessedEvent[] = [];
   const multiPerDay: Record<string, ProcessedEvent[]> = {};
   for (let i = 0; i < events?.length; i++) {
-    console.log("timezone", timeZone);
+    // console.log("timezone", timeZone);
     const event = convertEventTimeZone(events[i], timeZone);
     let withinSlot = event?.allDay || differenceInDaysOmitTime(event?.start, event?.end) > 0;
     if (!withinSlot) continue;

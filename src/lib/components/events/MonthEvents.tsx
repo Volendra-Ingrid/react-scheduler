@@ -41,6 +41,9 @@ const MonthEvents = ({
   cellHeight,
 }: MonthEventProps) => {
   const LIMIT = Math.round((cellHeight - MONTH_NUMBER_HEIGHT) / MULTI_DAY_EVENT_HEIGHT - 1);
+  // console.log("LIMIT", LIMIT);
+  // console.log("EVENTS.LENGTH", events.length);
+  // console.log("EVENTS", events);
   const { translations, month, locale, timeZone } = useStore();
   const { renderedSlots } = usePosition();
 
@@ -50,7 +53,9 @@ const MonthEvents = ({
     // console.log("today events", events);
     // console.log("today", today);
 
-    for (let i = 0; i < Math.min(events.length, LIMIT + 1); i++) {
+    // for (let i = 0; i < Math.min(events.length, LIMIT + 1); i++) {
+      for (let i = 0; i < events.length; i++) {
+      // console.log("INSIDE");
       const event = convertEventTimeZone(events[i], timeZone);
       const fromPrevWeek = !!eachFirstDayInCalcRow && isBefore(event.start, eachFirstDayInCalcRow);
       const start = fromPrevWeek && eachFirstDayInCalcRow ? eachFirstDayInCalcRow : event.start;
@@ -103,11 +108,12 @@ const MonthEvents = ({
       elements.push(
         <div
           key={`${event.event_id}_${i}`}
-          className="rs__multi_day"
+          className={`rs__multi_day ${eventLength > 1? "multiple": "single"}`}
           style={{
             top: topSpace,
             width: `${100 * eventLength}%`,
             height: MONTH_BAR_HEIGHT,
+            backgroundColor: eventLength > 1?"rgb(211, 173, 237)": " rgb(253, 208, 255)"
           }}
         >
           <EventItem

@@ -4,12 +4,13 @@ import useStore from "./useStore";
 import { revertTimeZonedDate } from "../helpers/generals";
 
 interface Props {
+  day: Date;
   start: Date;
   end: Date;
   resourceKey: string;
   resourceVal: string | number;
 }
-export const useCellAttributes = ({ start, end, resourceKey, resourceVal }: Props) => {
+export const useCellAttributes = ({ day, start, end, resourceKey, resourceVal }: Props) => {
   const {
     triggerDialog,
     onCellClick,
@@ -25,28 +26,24 @@ export const useCellAttributes = ({ start, end, resourceKey, resourceVal }: Prop
     tabIndex: editable ? 0 : -1,
     disableRipple: !editable,
     onClick: () => {
-      if (editable) {
+      // if (editable) {
         // triggerDialog(true, {
         //   start,
         //   end,
         //   [resourceKey]: resourceVal,
         // });
         // SET TO FALSE FOR THE MEANTIME, TO AVOID POPUP FOR DAY VIEW
-        triggerDialog(false, {
-          start,
-          end,
-          [resourceKey]: resourceVal,
-        });
-      }
+        triggerDialog(true, day);
+      // }
 
       // console.log("resource key", resourceKey);
       // console.log("resouce val", resourceVal);
       // console.log("start", start);
       // console.log("end", end);
 
-      if (onCellClick && typeof onCellClick === "function") {
-        onCellClick(start, end, resourceKey, resourceVal);
-      }
+      // if (onCellClick && typeof onCellClick === "function") {
+      //   onCellClick(start, end, resourceKey, resourceVal);
+      // }
     },
     onDragOver: (e: DragEvent<HTMLButtonElement>) => {
       e.preventDefault();

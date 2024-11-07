@@ -8,7 +8,9 @@ import {
   useMediaQuery,
   useTheme,
 } from "@mui/material";
+import {  IconButton } from "@mui/material";
 import { addMinutes, differenceInMinutes } from "date-fns";
+import ClearRoundedIcon from "@mui/icons-material/ClearRounded";
 import { Fragment, useState } from "react";
 import { EditorDatePicker } from "../components/inputs/DatePicker";
 import { EditorInput } from "../components/inputs/Input";
@@ -24,6 +26,8 @@ import {
   ProcessedEvent,
   SchedulerHelpers,
 } from "../types";
+import { Day } from "./Day";
+import { DayPopupElement } from "./DayPopupElement";
 
 export type StateItem = {
   value: any;
@@ -88,11 +92,12 @@ const DayPopup = () => {
     dialog,
     triggerDialog,
     selectedRange,
+    selectedDate,
     selectedEvent,
     resourceFields,
     selectedResource,
     triggerLoading,
-    onConfirm,
+    // onConfirm,
     customEditor,
     confirmEvent,
     dialogMaxWidth,
@@ -113,92 +118,92 @@ const DayPopup = () => {
     });
   };
 
-  const handleClose = (clearState?: boolean) => {
-    if (clearState) {
-      setState(initialState(fields));
-    }
-    triggerDialog(false);
+  const handleClose = () => {
+    // if (clearState) {
+    //   setState(initialState(fields));
+    // }
+    triggerDialog(false, selectedDate);
   };
 
-  const handleConfirm = async () => {
-    let body = {} as ProcessedEvent;
-    for (const key in state) {
-      body[key] = state[key].value;
-      if (!customEditor && !state[key].validity) {
-        return setTouched(true);
-      }
-    }
-    try {
-      triggerLoading(true);
-      // Auto fix date
-      body.end =
-        body.start >= body.end
-          ? addMinutes(body.start, differenceInMinutes(selectedRange?.end!, selectedRange?.start!))
-          : body.end;
-      // Specify action
-      const action: EventActions = selectedEvent?.event_id ? "edit" : "create";
-      // Trigger custom/remote when provided
-      if (onConfirm) {
-        body = await onConfirm(body, action);
-      } else {
-        // Create/Edit local data
-        body.event_id =
-          selectedEvent?.event_id || Date.now().toString(36) + Math.random().toString(36).slice(2);
-      }
+  // const handleConfirm = async () => {
+  //   let body = {} as ProcessedEvent;
+  //   for (const key in state) {
+  //     body[key] = state[key].value;
+  //     if (!customEditor && !state[key].validity) {
+  //       return setTouched(true);
+  //     }
+  //   }
+  //   try {
+  //     triggerLoading(true);
+  //     // Auto fix date
+  //     body.end =
+  //       body.start >= body.end
+  //         ? addMinutes(body.start, differenceInMinutes(selectedRange?.end!, selectedRange?.start!))
+  //         : body.end;
+  //     // Specify action
+  //     const action: EventActions = selectedEvent?.event_id ? "edit" : "create";
+  //     // Trigger custom/remote when provided
+  //     if (onConfirm) {
+  //       body = await onConfirm(body, action);
+  //     } else {
+  //       // Create/Edit local data
+  //       body.event_id =
+  //         selectedEvent?.event_id || Date.now().toString(36) + Math.random().toString(36).slice(2);
+  //     }
 
-      body.start = revertTimeZonedDate(body.start, timeZone);
-      body.end = revertTimeZonedDate(body.end, timeZone);
+  //     body.start = revertTimeZonedDate(body.start, timeZone);
+  //     body.end = revertTimeZonedDate(body.end, timeZone);
 
-      confirmEvent(body, action);
-      handleClose(true);
-    } catch (error) {
-      console.error(error);
-    } finally {
-      triggerLoading(false);
-    }
-  };
-  const renderInputs = (key: string) => {
-    const stateItem = state[key];
-    switch (stateItem.type) {
-      case "input":
-        return (
-          <EditorInput
-            value={stateItem.value}
-            name={key}
-            onChange={handleEditorState}
-            touched={touched}
-            {...stateItem.config}
-            label={translations.event[key] || stateItem.config?.label}
-          />
-        );
-      case "date":
-        return (
-          <EditorDatePicker
-            value={stateItem.value}
-            name={key}
-            onChange={(...args) => handleEditorState(...args, true)}
-            touched={touched}
-            {...stateItem.config}
-            label={translations.event[key] || stateItem.config?.label}
-          />
-        );
-      case "select":
-        const field = fields.find((f) => f.name === key);
-        return (
-          <EditorSelect
-            value={stateItem.value}
-            name={key}
-            options={field?.options || []}
-            onChange={handleEditorState}
-            touched={touched}
-            {...stateItem.config}
-            label={translations.event[key] || stateItem.config?.label}
-          />
-        );
-      default:
-        return "";
-    }
-  };
+  //     confirmEvent(body, action);
+  //     handleClose(true);
+  //   } catch (error) {
+  //     console.error(error);
+  //   } finally {
+  //     triggerLoading(false);
+  //   }
+  // };
+  // const renderInputs = (key: string) => {
+  //   const stateItem = state[key];
+  //   switch (stateItem.type) {
+  //     case "input":
+  //       return (
+  //         <EditorInput
+  //           value={stateItem.value}
+  //           name={key}
+  //           onChange={handleEditorState}
+  //           touched={touched}
+  //           {...stateItem.config}
+  //           label={translations.event[key] || stateItem.config?.label}
+  //         />
+  //       );
+  //     case "date":
+  //       return (
+  //         <EditorDatePicker
+  //           value={stateItem.value}
+  //           name={key}
+  //           onChange={(...args) => handleEditorState(...args, true)}
+  //           touched={touched}
+  //           {...stateItem.config}
+  //           label={translations.event[key] || stateItem.config?.label}
+  //         />
+  //       );
+  //     case "select":
+  //       const field = fields.find((f) => f.name === key);
+  //       return (
+  //         <EditorSelect
+  //           value={stateItem.value}
+  //           name={key}
+  //           options={field?.options || []}
+  //           onChange={handleEditorState}
+  //           touched={touched}
+  //           {...stateItem.config}
+  //           label={translations.event[key] || stateItem.config?.label}
+  //         />
+  //       );
+  //     default:
+  //       return "";
+  //   }
+  // };
 
   const renderEditor = () => {
     if (customEditor) {
@@ -213,30 +218,54 @@ const DayPopup = () => {
       return customEditor(schedulerHelpers);
     }
     return (
-      <Fragment>
-        <DialogTitle>
-          {selectedEvent ? translations.form.editTitle : translations.form.addTitle}
+      // <Fragment>
+      //   <DialogTitle>
+      //     {selectedEvent ? translations.form.editTitle : translations.form.addTitle}
+      //   </DialogTitle>
+      //   <DialogContent style={{ overflowX: "hidden" }}>
+      //     <Grid container spacing={2}>
+      //       {Object.keys(state).map((key) => {
+      //         const item = state[key];
+      //         return (
+      //           <Grid item key={key} sm={item.config?.sm} xs={12}>
+      //             {renderInputs(key)}
+      //           </Grid>
+      //         );
+      //       })}
+      //     </Grid>
+      //   </DialogContent>
+      //   <DialogActions>
+      //     <Button color="inherit" fullWidth onClick={() => handleClose()}>
+      //       {translations.form.cancel}
+      //     </Button>
+      //     <Button color="primary" fullWidth onClick={handleConfirm}>
+      //       {translations.form.confirm}
+      //     </Button>
+      //   </DialogActions>
+      // </Fragment>
+      
+
+       <Fragment>
+        <DialogTitle className="flex justify-between !p-[10px]">
+        {`${selectedDate.toLocaleDateString("en-US", { year: "numeric", month: "long", day: "numeric" })}`}
+        {` ${selectedDate.toLocaleDateString("en-US", { weekday: "long" })}`}
+        <IconButton size="small" onClick={handleClose}>
+              <ClearRoundedIcon />
+            </IconButton>
+            
         </DialogTitle>
-        <DialogContent style={{ overflowX: "hidden" }}>
-          <Grid container spacing={2}>
-            {Object.keys(state).map((key) => {
-              const item = state[key];
-              return (
-                <Grid item key={key} sm={item.config?.sm} xs={12}>
-                  {renderInputs(key)}
-                </Grid>
-              );
-            })}
-          </Grid>
+        <DialogContent style={{ overflowX: "clip", overflowY: "clip", padding: "20px", width: "700px", maxHeight: "600px", paddingBottom: "20px", marginBottom:"20px"}}>
+           <DayPopupElement />
+        
         </DialogContent>
-        <DialogActions>
+        {/* <DialogActions>
           <Button color="inherit" fullWidth onClick={() => handleClose()}>
             {translations.form.cancel}
           </Button>
           <Button color="primary" fullWidth onClick={handleConfirm}>
             {translations.form.confirm}
           </Button>
-        </DialogActions>
+        </DialogActions> */}
       </Fragment>
     );
   };

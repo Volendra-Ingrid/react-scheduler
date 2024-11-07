@@ -38,6 +38,7 @@ const Navigation = () => {
     agenda,
     toggleAgenda,
     // enableAgenda,
+    triggerChangeSelectedDate,
   } = useStore();
   const [anchorEl, setAnchorEl] = useState<Element | null>(null);
   const theme = useTheme();
@@ -51,11 +52,14 @@ const Navigation = () => {
   const handleSelectedDateChange = (date: Date) => {
     // console.log("date in handleSelecteddatechange", date);
     handleState(date, "selectedDate");
-    // alert(`date in handleSelecteddatechange ${date}`);
+    // alert(`date in handleSelecteddatechange ${date}, selectedDate: ${selectedDate}`);
 
     if (onSelectedDateChange && typeof onSelectedDateChange === "function") {
       onSelectedDateChange(date);
     }
+    triggerChangeSelectedDate(date);
+
+
   };
 
   const handleChangeView = (view: View) => {

@@ -2,7 +2,7 @@ import { DragEvent, useEffect, useState } from "react";
 import { EventActions, ProcessedEvent, SchedulerProps } from "../types";
 import { defaultProps, initialStore } from "./default";
 import { StoreContext } from "./context";
-import { SchedulerState, SelectedRange, Store } from "./types";
+import { SchedulerState, Store } from "./types";
 import { arraytizeFieldVal, getAvailableViews } from "../helpers/generals";
 import { addMinutes, differenceInMinutes, isEqual } from "date-fns";
 import { View } from "../components/nav/Navigation";
@@ -47,20 +47,38 @@ export const StoreProvider = ({ children, initial }: Props) => {
     });
   };
 
-  const triggerDialog = (status: boolean, selected?: SelectedRange | ProcessedEvent) => {
-    const isEvent = selected as ProcessedEvent;
+  // const triggerDialog = (status: boolean, selected?: SelectedRange | ProcessedEvent) => {
+  //   const isEvent = selected as ProcessedEvent;
+
+  //   set((prev) => ({
+  //     ...prev,
+  //     dialog: status,
+  //     selectedRange: isEvent?.event_id
+  //       ? undefined
+  //       : isEvent || {
+  //           start: new Date(),
+  //           end: new Date(Date.now() + 60 * 60 * 1000),
+  //         },
+  //     selectedEvent: isEvent?.event_id ? isEvent : undefined,
+  //     selectedResource: prev.selectedResource || isEvent?.[state.resourceFields?.idField],
+  //   }));
+  // };
+
+  const triggerDialog = (status: boolean, date: Date ) => {
 
     set((prev) => ({
       ...prev,
       dialog: status,
-      selectedRange: isEvent?.event_id
-        ? undefined
-        : isEvent || {
-            start: new Date(),
-            end: new Date(Date.now() + 60 * 60 * 1000),
-          },
-      selectedEvent: isEvent?.event_id ? isEvent : undefined,
-      selectedResource: prev.selectedResource || isEvent?.[state.resourceFields?.idField],
+      selectedDate: date || new Date(),
+    }));
+  };
+
+  const triggerChangeSelectedDate = (date: Date ) => {
+
+    set((prev) => ({
+      ...prev,
+      dialog: false,
+      selectedDate: date || new Date(),
     }));
   };
 
@@ -96,27 +114,8 @@ export const StoreProvider = ({ children, initial }: Props) => {
   };
 
   const handleGotoDayPopup = (day: Date) => {
-    // console.log("day inside handlegotopay", day);
-    const currentViews = getViews();
-    let view: View | undefined;
-    if (currentViews.includes("day")) {
-      view = "day";
-
-      set((prev) => ({ ...prev, selectedDate: day }));
-    } else if (currentViews.includes("week")) {
-      view = "week";
-      set((prev) => ({ ...prev, selectedDate: day }));
-    } else {
-      console.warn("No Day/Week views available");
-    }
-
-    // if (!!view && state.onViewChange && typeof state.onViewChange === "function") {
-    //   state.onViewChange(view, state.agenda);
-    // }
-
-    if (!!view && state.onSelectedDateChange && typeof state.onSelectedDateChange === "function") {
-      state.onSelectedDateChange(day);
-    }
+    triggerDialog(true, day);
+    
   };
 
   const confirmEvent = (event: ProcessedEvent | ProcessedEvent[], action: EventActions) => {
@@ -226,6 +225,7 @@ export const StoreProvider = ({ children, initial }: Props) => {
         confirmEvent,
         setCurrentDragged,
         onDrop,
+        triggerChangeSelectedDate
       }}
     >
       {children}

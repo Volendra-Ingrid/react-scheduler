@@ -17,9 +17,10 @@ interface EventItemProps {
   hasPrev?: boolean;
   hasNext?: boolean;
   showdate?: boolean;
+  popup?: boolean;
 }
 
-const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: EventItemProps) => {
+const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true, popup }: EventItemProps) => {
   const { direction, locale, hourFormat, eventRenderer, onEventClick, view, disableViewer } =
     useStore();
   const dragProps = useDragAttributes(event);
@@ -56,7 +57,7 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
     }
 
     let item = (
-      <div style={{ padding: "2px 6px" }}>
+      <div style={{ padding: "2px 6px", backgroundColor: " rgb(253, 208, 255)" }}>
         <Typography variant="subtitle2" style={{ fontSize: 12 }} noWrap>
           {event.title}
         </Typography>
@@ -82,6 +83,7 @@ const EventItem = ({ event, multiday, hasPrev, hasNext, showdate = true }: Event
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
+            backgroundColor: popup? "inherit": "rgb(211, 173, 237)"
           }}
         >
           <Typography sx={{ fontSize: 11 }} noWrap>

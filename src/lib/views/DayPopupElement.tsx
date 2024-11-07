@@ -42,7 +42,8 @@ export interface DayProps {
   navigation?: boolean;
 }
 
-const Day = () => {
+// This is a modification of the Day module
+const DayPopupElement = () => {
   const {
     day,
     selectedDate,
@@ -133,7 +134,7 @@ const Day = () => {
         {todayMulti && todayMulti?.length > 0 && (
           <div
             className="rs__block_col"
-            style={{ height: MULTI_DAY_EVENT_HEIGHT * todayMulti?.length }}
+            style={{ height: MULTI_DAY_EVENT_HEIGHT * todayMulti?.length,  }}
           >
             {todayMulti?.map((event, i) => {
               const hasPrev = isBefore(event?.start, startOfDay(selectedDate));
@@ -141,14 +142,15 @@ const Day = () => {
               return (
                 <div
                   key={event?.event_id}
-                  className="rs__multi_day"
+                  className="rs__multi_day popup"
                   style={{
                     top: i * MULTI_DAY_EVENT_HEIGHT,
                     width: "99.9%",
                     overflowX: "hidden",
+                    marginBottom: "5px",
                   }}
                 >
-                  <EventItem event={event} multiday hasPrev={hasPrev} hasNext={hasNext} />
+                  <EventItem event={event} multiday hasPrev={hasPrev} hasNext={hasNext} popup={true} />
                 </div>
               );
             })}
@@ -178,49 +180,34 @@ const Day = () => {
     const headerHeight = MULTI_DAY_EVENT_HEIGHT * allWeekMulti.length + 45;
     return (
       <>
-        {loading ? LoadingComp : null}
+      <div style={{paddingBottom: "5px", paddingLeft: "5px", paddingRight: "5px"}}>
+      {loading ? LoadingComp : null}
         {/* Header */}
         {!loading && selectedDate && locale && headerHeight && (
-          <TableGrid days={1} sticky="1" stickyNavigation={stickyNavigation}
-          // style={{zIndex:"inherit" }}
-          >
-            <span className="rs__cell"></span>
-            <span
+         
+            
+         <div style={{ gap: "1rem", maxHeight: "401px" , paddingBottom: "5px", overflowY: "scroll"}}>
+             <span
               className={`rs__cell rs__header ${isToday(selectedDate) ? "rs__today_cell" : ""}`}
-              style={{ height: headerHeight}}
             >
-              {typeof headRenderer === "function" ? (
+              {/* {typeof headRenderer === "function" ? (
                 <div>{headRenderer(selectedDate)}</div>
               ) : (
                 <TodayTypo date={selectedDate} locale={locale} />
-              )}
+              )} */}
               {resourcedEvents && resourcedEvents?.length > 0 && selectedDate && timeZone
                 ? renderMultiDayEvents(resourcedEvents)
                 : null}
             </span>
-          </TableGrid>
+         </div>
+          
         )}
 
+        {/* Can be deleted below:  */}
         <TableGrid days={1}>
-          {/* Body */}
-          {/* {hours.map((h, i) => {
-            const start = new Date(`${format(selectedDate, "yyyy/MM/dd")} ${format(h, hFormat)}`);
-            const end = addMinutes(start, step);
-            const field = resourceFields.idField;
-            return (
-              <Fragment key={i}> */}
-          {/* Time Cells */}
-          {/* <span className="rs__cell rs__header rs__time" style={{ height: CELL_HEIGHT }}>
-                  {typeof hourRenderer === "function" ? (
-                    <div>{hourRenderer(format(h, hFormat, { locale }))}</div>
-                  ) : (
-                    <Typography variant="caption">{format(h, hFormat, { locale })}</Typography>
-                  )}
-                </span> */}
+         
           {selectedDate && (
             <span className={`rs__cell ${isToday(selectedDate) ? "rs__today_cell" : ""}`}>
-              {/* Events of this day - run once on the top hour column */}
-              {/* {i === 0 && ( */}
               {resourcedEvents &&
                 selectedDate &&
                 timeZone &&
@@ -241,23 +228,12 @@ const Day = () => {
                     timeZone={timeZone}
                   />
                 )}
-              {/* )} */}
-              {/* Cell */}
-              {/* <Cell
-                   start={start}
-                   end={end}
-                   day={selectedDate}
-                   height={CELL_HEIGHT}
-                   resourceKey={field}
-                   resourceVal={resource ? resource[field] : null}
-                   cellRenderer={cellRenderer}
-                 /> */}
+             
             </span>
           )}
-          {/* </Fragment> */}
-          {/* ); */}
-          {/* })} */}
+         
         </TableGrid>
+      </div>
       </>
     );
   };
@@ -265,4 +241,4 @@ const Day = () => {
   return resources.length ? <WithResources renderChildren={renderTable} /> : renderTable();
 };
 
-export { Day };
+export { DayPopupElement };

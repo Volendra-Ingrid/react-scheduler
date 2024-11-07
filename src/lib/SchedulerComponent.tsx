@@ -1,7 +1,7 @@
 import React, { forwardRef, useMemo } from "react";
 import { Week } from "./views/Week";
 import { Navigation } from "./components/nav/Navigation";
-import Editor from "./views/Editor";
+// import Editor from "./views/Editor";
 import { CircularProgress, Typography } from "@mui/material";
 import { Month } from "./views/Month";
 import { Day } from "./views/Day";
@@ -9,6 +9,7 @@ import { Table, Wrapper } from "./styles/styles";
 import useStore from "./hooks/useStore";
 import { SchedulerRef } from "./types";
 import { PositionProvider } from "./positionManger/provider";
+import DayPopup from "./views/DayPopup";
 
 // ErrorBoundary component with type annotations
 interface ErrorBoundaryProps {
@@ -107,7 +108,9 @@ const SchedulerComponent = forwardRef<SchedulerRef, unknown>(function SchedulerC
           <PositionProvider>{Views}</PositionProvider>
         </ErrorBoundary>
       </Table>
-      {dialog && <Editor />}
+      {/* {dialog && <Editor />} */}
+      {dialog && <DayPopup />}
+
     </Wrapper>
   );
 });

@@ -147,6 +147,7 @@ export const initialStore = {
   getViews: () => [],
   toggleAgenda: () => {},
   triggerDialog: () => {},
+  triggerChangeSelectedDate: () => {},
   triggerLoading: () => {},
   handleGotoDay: () => {},
   handleGotoDayPopup: () => {},

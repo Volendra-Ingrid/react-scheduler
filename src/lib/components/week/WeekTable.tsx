@@ -1,10 +1,10 @@
-// import {  useMemo } from "react";
+import {  useMemo } from "react";
 import useStore from "../../hooks/useStore";
 import { TableGrid } from "../../styles/styles";
 import {
   differenceInDaysOmitTime,
   filterMultiDaySlot,
-  // getHourFormat,
+  getHourFormat,
 } from "../../helpers/generals";
 import { MULTI_DAY_EVENT_HEIGHT } from "../../helpers/constants";
 import { DefaultResource, ProcessedEvent } from "../../types";
@@ -13,9 +13,9 @@ import { endOfDay, format, isAfter, isBefore, isSameDay, isToday, startOfDay } f
 import TodayTypo from "../common/TodayTypo";
 import usePosition from "../../positionManger/usePosition";
 import EventItem from "../events/EventItem";
-// import { Typography } from "@mui/material";
-// import TodayEvents from "../events/TodayEvents";
-// import Cell from "../common/Cell";
+import { Typography } from "@mui/material";
+import TodayEvents from "../events/TodayEvents";
+import Cell from "../common/Cell";
 
 type Props = {
   daysList: Date[];
@@ -36,20 +36,20 @@ const WeekTable = ({
 }: Props) => {
   const {
     week,
-    // events,
+    events,
     handleGotoDay,
-    // resources,
+    resources,
     resourceFields,
-    // resourceViewMode,
-    // direction,
+    resourceViewMode,
+    direction,
     locale,
-    // hourFormat,
+    hourFormat,
     timeZone,
     stickyNavigation,
   } = useStore();
 
   const {
-    // startHour, endHour, step, cellRenderer,hourRenderer,
+    startHour, endHour, step, cellRenderer,hourRenderer,
     disableGoToDay,
     headRenderer,
   } = week!;
@@ -58,27 +58,27 @@ const WeekTable = ({
   const MULTI_SPACE = MULTI_DAY_EVENT_HEIGHT;
   const weekStart = startOfDay(daysList[0]);
   const weekEnd = endOfDay(daysList[daysList.length - 1]);
-  // const hFormat = getHourFormat(hourFormat);
+  const hFormat = getHourFormat(hourFormat);
 
   // Equalizing multi-day section height except in resource/tabs mode
-  // const headerHeight = useMemo(() => {
-  //   const shouldEqualize = resources?.length && resourceViewMode === "default";
-  //   const allWeekMulti = filterMultiDaySlot(
-  //     shouldEqualize ? events : resourcedEvents,
-  //     daysList,
-  //     timeZone,
-  //     true
-  //   );
-  //   return MULTI_SPACE * allWeekMulti.length + 45;
-  // }, [
-  //   MULTI_SPACE,
-  //   daysList,
-  //   events,
-  //   resourceViewMode,
-  //   resourcedEvents,
-  //   resources.length,
-  //   timeZone,
-  // ]);
+  const headerHeight = useMemo(() => {
+    const shouldEqualize = resources?.length && resourceViewMode === "default";
+    const allWeekMulti = filterMultiDaySlot(
+      shouldEqualize ? events : resourcedEvents,
+      daysList,
+      timeZone,
+      true
+    );
+    return MULTI_SPACE * allWeekMulti.length + 45;
+  }, [
+    MULTI_SPACE,
+    daysList,
+    events,
+    resourceViewMode,
+    resourcedEvents,
+    resources.length,
+    timeZone,
+  ]);
 
   const renderMultiDayEvents = (
     events: ProcessedEvent[],
@@ -132,13 +132,14 @@ const WeekTable = ({
         ref={headersRef}
         sticky="1"
         stickyNavigation={stickyNavigation}
+        // style={{zIndex:"inherit"}}
       >
         <span className="rs__cell rs__time"></span>
         {daysList?.map((date, i) => (
           <span
             key={i}
             className={`rs__cell rs__header ${isToday(date) ? "rs__today_cell" : ""}`}
-            // style={{ height: headerHeight }}
+            style={{ height: headerHeight}}
           >
             {typeof headRenderer === "function" ? (
               <div>{headRenderer(date)}</div>

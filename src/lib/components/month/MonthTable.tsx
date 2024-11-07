@@ -18,6 +18,7 @@ import {
   isTimeZonedToday,
   sortEventsByTheEarliest,
 } from "../../helpers/generals";
+import {MULTI_DAY_EVENT_HEIGHT, MONTH_NUMBER_HEIGHT} from "../../helpers/constants";
 import useStore from "../../hooks/useStore";
 import useSyncScroll from "../../hooks/useSyncScroll";
 import { TableGrid } from "../../styles/styles";
@@ -39,8 +40,8 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
     month,
     selectedDate,
     events,
-    handleGotoDay,
-    // handleGotoDayPopup,
+    // handleGotoDay,
+    handleGotoDayPopup,
     resourceFields,
     fields,
     locale,
@@ -58,6 +59,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
   const monthStart = startOfMonth(selectedDate);
   const hFormat = getHourFormat(hourFormat);
   const CELL_HEIGHT = height / eachWeekStart.length;
+
 
   const renderCells = useCallback(
     (resource?: DefaultResource) => {
@@ -88,6 +90,24 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
       // console.log("resourcedEvents", resourcedEvents);
       const rows: JSX.Element[] = [];
 
+      let maxDayEventsCount = 0;
+      // console.log('eachWeekStart', eachWeekStart);
+      // console.log('weekDays', weekDays);
+      daysList.forEach((day) => {
+        const todayEvents = resourcedEvents
+          .flatMap((e) => getRecurrencesForDate(e, day))
+          .filter((e) => {
+        if (isSameDay(e.start, day)) return true;
+        const dayInterval = { start: startOfDay(e.start), end: endOfDay(e.end) };
+        return isWithinInterval(day, dayInterval);
+          });
+        if (todayEvents.length > maxDayEventsCount) {
+          maxDayEventsCount = todayEvents.length;
+        }
+      });
+      // console.log('maxDayEventsCount', maxDayEventsCount);
+      const DYNAMIC_CELL_HEIGHT = maxDayEventsCount> 3 ? (maxDayEventsCount>13? 13* MULTI_DAY_EVENT_HEIGHT +MONTH_NUMBER_HEIGHT : maxDayEventsCount* MULTI_DAY_EVENT_HEIGHT +MONTH_NUMBER_HEIGHT  ):  CELL_HEIGHT;
+
       for (const startDay of eachWeekStart) {
         const cells = weekDays.map((d) => {
           const today = addDays(startDay, d);
@@ -104,16 +124,21 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                 return true;
               return false;
             });
+           
+            // console.log('resourcedEvents', resourcedEvents);
+            // console.log('todayEvents', todayEvents);
+          
           const isToday = isTimeZonedToday({ dateLeft: today, timeZone });
           return (
             <span
-              style={{ height: CELL_HEIGHT }}
+              // style={{ height: CELL_HEIGHT }}
+              style={{ height: DYNAMIC_CELL_HEIGHT }}
               key={d.toString()}
               className="rs__cell"
               onClick={(e) => {
                 e.stopPropagation();
                 if (!disableGoToDay) {
-                  handleGotoDay(today);
+                  handleGotoDayPopup(today);
                 }
               }}
               // onMouseEnter={(e) => {
@@ -144,7 +169,8 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                 start={start}
                 end={end}
                 day={selectedDate}
-                height={CELL_HEIGHT}
+                // height={CELL_HEIGHT}
+                height = {DYNAMIC_CELL_HEIGHT}
                 resourceKey={field}
                 resourceVal={resource ? resource[field] : null}
                 cellRenderer={cellRenderer}
@@ -172,7 +198,7 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                         e.stopPropagation();
                         if (!disableGoToDay) {
                           // console.log("today, hadleGotopay calledinside monthtable", today);
-                          handleGotoDay(today);
+                          handleGotoDayPopup(today);
                         }
                       }}
                     >
@@ -190,10 +216,11 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
                   daysList={daysList}
                   onViewMore={(e) => {
                     onClickMore && typeof onClickMore === "function"
-                      ? onClickMore(e, handleGotoDay)
-                      : handleGotoDay(e);
+                      ? onClickMore(e, handleGotoDayPopup)
+                      : handleGotoDayPopup(e);
                   }}
-                  cellHeight={CELL_HEIGHT}
+                  // cellHeight={CELL_HEIGHT}
+                  cellHeight={DYNAMIC_CELL_HEIGHT}
                 />
               </Fragment>
             </span>
@@ -214,7 +241,8 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
       events,
       fields,
       hFormat,
-      handleGotoDay,
+      // handleGotoDay,
+      handleGotoDayPopup,
       headRenderer,
       monthStart,
       onClickMore,
@@ -239,6 +267,8 @@ const MonthTable = ({ daysList, resource, eachWeekStart }: Props) => {
         indent="0"
         sticky="1"
         stickyNavigation={stickyNavigation}
+        // style={{zIndex:"inherit"}}
+
       >
         {daysList.map((date, i) => (
           <Typography

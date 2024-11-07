@@ -23,7 +23,7 @@ const Cell = ({
   height,
   children,
 }: CellProps) => {
-  const props = useCellAttributes({ start, end, resourceKey, resourceVal });
+  const props = useCellAttributes({ day, start, end, resourceKey, resourceVal });
 
   if (cellRenderer) {
     return cellRenderer({
